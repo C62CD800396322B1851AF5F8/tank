@@ -40,4 +40,3 @@ private:
 };
 
 #endif /* defined(__git_tank__tank__) */
-

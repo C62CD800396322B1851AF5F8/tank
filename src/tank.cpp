@@ -99,4 +99,3 @@ void Tank::update(sf::Time elapsed, float width, float height) {
         this->rotate(angle * e);
     }
 }
-

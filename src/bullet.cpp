@@ -1,6 +1,7 @@
 
 #include "bullet.h"
 #include "math.h"
+#include "obstacle.h"
 #include "tank.h"
 
 float norm2(float x, float y) {
@@ -22,6 +23,17 @@ bool Bullet::intersects(Tank& other) {
     float vy = tp.y - op.y;
     float r = this->getRadius() + other.getRadius();
     return norm2(vx, vy) <= r * r;
+}
+
+bool Bullet::intersects(Obstacle& other) {
+    float other_radius = other.getRadius();
+    // minimum Euclidian distance
+    float r = this->getRadius() + other_radius;
+    // center of the Obstacle
+    sf::Vector2f ocenter = other.getPosition() + sf::Vector2f(other_radius, other_radius);
+    // vector from Obstacle to bullet
+    sf::Vector2f p = this->getPosition() - ocenter;
+    return p.x * p.x + p.y * p.y < r * r;
 }
 
 void Bullet::update(sf::Time& elapsed, float width, float height) {
@@ -49,4 +61,3 @@ void Bullet::update(sf::Time& elapsed, float width, float height) {
     }
     this->setPosition(p.x, p.y);
 }
-

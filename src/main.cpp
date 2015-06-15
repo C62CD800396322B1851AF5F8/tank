@@ -1,7 +1,8 @@
 
 #include <SFML/Graphics.hpp>
-#include "tank.h"
 #include "bullet.h"
+#include "obstacle.h"
+#include "tank.h"
 
 #define WIDTH 800
 #define HEIGHT 600
@@ -73,7 +74,7 @@ void testFireBullet(sf::Window& window, sf::Event& event, std::vector<Bullet>& b
     }
 }
 
-void repaint(sf::RenderWindow& window, std::vector<Bullet>& bullets, std::vector<Tank>& tanks) {
+void repaint(sf::RenderWindow& window, std::vector<Bullet>& bullets, std::vector<Obstacle>& obstacles, std::vector<Tank>& tanks) {
     // Clear screen
     window.clear();
     
@@ -86,12 +87,16 @@ void repaint(sf::RenderWindow& window, std::vector<Bullet>& bullets, std::vector
         Tank& t = tanks[i];
         window.draw(t);
     }
+    for (std::size_t i = 0; i < obstacles.size(); i++) {
+        Obstacle& o = obstacles[i];
+        window.draw(o);
+    }
     
     // Update the window
     window.display();
 }
 
-void update(sf::Time& elapsed, std::vector<Bullet>& bullets, std::vector<Tank>& tanks) {
+void update(sf::Time& elapsed, std::vector<Bullet>& bullets, std::vector<Obstacle>& obstacles, std::vector<Tank>& tanks) {
     // move everything
     for (std::size_t i = 0; i < bullets.size(); i++) {
         Bullet& b = bullets[i];
@@ -111,6 +116,12 @@ void update(sf::Time& elapsed, std::vector<Bullet>& bullets, std::vector<Tank>& 
                 tanks.erase(tanks.begin() + j);
             }
         }
+        for (std::size_t j = 0; j < obstacles.size(); j++) {
+            Obstacle& o = obstacles[j];
+            if (b.intersects(o)) {
+                bullets.erase(bullets.begin() + i);
+            }
+        }
     }
 }
 
@@ -128,6 +139,12 @@ int main(int, char const**)
     // create the bullet list
     std::vector<Bullet> bullets;
     
+    // create an obstacle
+    std::vector<Obstacle> obstacles;
+    obstacles.push_back(Obstacle(400, 300));
+    // or two
+    obstacles.push_back(Obstacle(WIDTH, HEIGHT/2));
+    
     // Start the game loop
     while (window.isOpen())
     {
@@ -143,10 +160,9 @@ int main(int, char const**)
         
         sf::Time elapsed = clock.restart();
         
-        update(elapsed, bullets, tanks);
-        repaint(window, bullets, tanks);
+        update(elapsed, bullets, obstacles, tanks);
+        repaint(window, bullets, obstacles, tanks);
     }
     
     return EXIT_SUCCESS;
 }
-

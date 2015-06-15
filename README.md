@@ -10,6 +10,7 @@ tanks are fighting in an arena. Their bullets can bounce on the external walls, 
 - Bullet
 - Obstacle
 - Wall
+
 The Tank, Bullet and Obstacle all a method returning the intersection if it touches -- they should inherit from the same parent class Thing.
 
 ### Utility objects

@@ -24,8 +24,29 @@ bool Bullet::intersects(Tank& other) {
     return norm2(vx, vy) <= r * r;
 }
 
-void Bullet::update(sf::Time& elapsed) {
+void Bullet::update(sf::Time& elapsed, float width, float height) {
     float e = elapsed.asSeconds();
     this->move(this->direction * e);
+    
+    // bounce on the walls
+    sf::Vector2f p = this->getPosition();
+    float r = this->getRadius();
+    if (p.x < r) {
+        direction = sf::Vector2f(-direction.x, direction.y);
+        p.x = r;
+    }
+    if (p.y < r) {
+        direction = sf::Vector2f(direction.x, -direction.y);
+        p.y = r;
+    }
+    if (p.x > width - r) {
+        direction = sf::Vector2f(-direction.x, direction.y);
+        p.x = width - r;
+    }
+    if (p.y > height - r) {
+        direction = sf::Vector2f(direction.x, -direction.y);
+        p.y = height - r;
+    }
+    this->setPosition(p.x, p.y);
 }
 

@@ -3,6 +3,9 @@
 #include "tank.h"
 #include "bullet.h"
 
+#define WIDTH 800
+#define HEIGHT 600
+
 // Close the rendering window and therefore exits the program
 void exit(sf::Event& event, sf::Window& window) {
     // Close window: exit
@@ -92,11 +95,11 @@ void update(sf::Time& elapsed, std::vector<Bullet>& bullets, std::vector<Tank>& 
     // move everything
     for (std::size_t i = 0; i < bullets.size(); i++) {
         Bullet& b = bullets[i];
-        b.update(elapsed);
+        b.update(elapsed, WIDTH, HEIGHT);
     }
     for (std::size_t i = 0; i < tanks.size(); i++) {
         Tank& t = tanks[i];
-        t.update(elapsed);
+        t.update(elapsed, WIDTH, HEIGHT);
     }
     // check for collisions
     for (std::size_t i = 0; i < bullets.size(); i++) {
@@ -114,7 +117,7 @@ void update(sf::Time& elapsed, std::vector<Bullet>& bullets, std::vector<Tank>& 
 int main(int, char const**)
 {
     // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Tank Game");
+    sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Tank Game");
     
     // track elapsed time
     sf::Clock clock;

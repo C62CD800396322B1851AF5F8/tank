@@ -52,7 +52,7 @@ Bullet Tank::fire() {
     return b;
 }
 
-void Tank::update(sf::Time elapsed) {
+void Tank::update(sf::Time elapsed, float width, float height) {
     float e = elapsed.asSeconds();
     // update position
     if (!(movingUp ^ movingDown)) {
@@ -64,11 +64,28 @@ void Tank::update(sf::Time elapsed) {
         if (movingDown) {
             velocity = TANK_VELOCITY * (-1.0f);
         }
-
+        
         float rotation = this->getRotation() TO_RADIAN;
         sf::Vector2f offset = rotateVector(velocity, rotation);
-
+        
         this->move(offset * TANK_SPEED * e);
+        
+        // stay in the arena
+        sf::Vector2f p = this->getPosition();
+        float r = this->getRadius();
+        if (p.x < r) {
+            p.x = r;
+        }
+        if (p.y < r) {
+            p.y = r;
+        }
+        if (p.x > width-r) {
+            p.x = width-r;
+        }
+        if (p.y > height-r) {
+            p.y = height-r;
+        }
+        this->setPosition(p.x, p.y);
     }
     // update rotation
     if (turningLeft ^ turningRight) {

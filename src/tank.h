@@ -30,7 +30,7 @@ public:
     float getRadius();
 public:
     Bullet fire();
-    void update(sf::Time elapsed);
+    void update(sf::Time elapsed, float width, float height);
 private:
     bool movingUp = false;
     bool movingDown = false;

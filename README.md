@@ -32,11 +32,11 @@ If a Bullet touches a Bullet, an Obstacle or a Tank, it disappears.
 #### Obstacle
 An Obstacle doesn’t move, for the moment.
 
-## Possible problems:
+## Possible problems
 corner of the arena: the bullets are big enough to always touch a side of a wall, knowing its direction is adding (like vectors) towards the inside.
 
 ## Organisation
-- [ ] Code the Tank class and instantiate it to move it around a free space: advance, go backward, turn left, turn right and combine the turns and other moves.
+- [X] Code the Tank class and instantiate it to move it around a free space: advance, go backward, turn left, turn right and combine the turns and other moves.
 - [ ] Code the Bullet, and fire it from nowhere, then from the Tank and finally towards the tank to test if collision is detected correctly.
 - [ ] Code the Wall of the arena, fire a Bullet to check it bounces, then check if the Tank cannot pass through.
 - [ ] Code an Obstacle and check the detection with a Bullet works — the Bullet disappears but not the Obstacle.

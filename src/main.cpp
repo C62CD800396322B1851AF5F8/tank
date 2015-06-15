@@ -1,6 +1,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "tank.h"
+#include "bullet.h"
 
 // Close the rendering window and therefore exits the program
 void exit(sf::Event& event, sf::Window& window) {
@@ -33,7 +34,7 @@ void moveTank(sf::Event& event, Tank& tank) {
                 break;
         }
     }
-
+    
     if (event.type == sf::Event::KeyReleased) {
         switch (event.key.code) {
             case sf::Keyboard::Up:
@@ -54,24 +55,59 @@ void moveTank(sf::Event& event, Tank& tank) {
     }
 }
 
-void repaint(sf::RenderWindow& window, std::vector<Tank>& tanks) {
+void actionTank(sf::Event& event, std::vector<Bullet>& bullets, Tank& tank) {
+    if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
+        bullets.push_back(tank.fire());
+    }
+}
+
+void testFireBullet(sf::Window& window, sf::Event& event, std::vector<Bullet>& bullets, Tank& tank) {
+    if (event.type == sf::Event::MouseButtonPressed) {
+        sf::Vector2i p = sf::Mouse::getPosition(window);
+        sf::Vector2f p_t = tank.getPosition();
+        Bullet b(p.x, p.y, sf::Vector2f(p_t.x-p.x, p_t.y-p.y));
+        bullets.push_back(b);
+    }
+}
+
+void repaint(sf::RenderWindow& window, std::vector<Bullet>& bullets, std::vector<Tank>& tanks) {
     // Clear screen
     window.clear();
-
+    
     // Draw the sprites
+    for (std::size_t i = 0; i < bullets.size(); i++) {
+        Bullet& b = bullets[i];
+        window.draw(b);
+    }
     for (std::size_t i = 0; i < tanks.size(); i++) {
         Tank& t = tanks[i];
         window.draw(t);
     }
-
+    
     // Update the window
     window.display();
 }
 
-void update(sf::Time& elapsed, std::vector<Tank>& tanks) {
+void update(sf::Time& elapsed, std::vector<Bullet>& bullets, std::vector<Tank>& tanks) {
+    // move everything
+    for (std::size_t i = 0; i < bullets.size(); i++) {
+        Bullet& b = bullets[i];
+        b.update(elapsed);
+    }
     for (std::size_t i = 0; i < tanks.size(); i++) {
         Tank& t = tanks[i];
         t.update(elapsed);
+    }
+    // check for collisions
+    for (std::size_t i = 0; i < bullets.size(); i++) {
+        Bullet& b = bullets[i];
+        for (std::size_t j = 0; j < tanks.size(); j++) {
+            Tank& t = tanks[j];
+            if (b.intersects(t)) {
+                bullets.erase(bullets.begin() + i);
+                tanks.erase(tanks.begin() + j);
+            }
+        }
     }
 }
 
@@ -79,13 +115,16 @@ int main(int, char const**)
 {
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(800, 600), "Tank Game");
-
+    
     // track elapsed time
     sf::Clock clock;
-
+    
     // create a Tank
     std::vector<Tank> tanks(1);
-
+    
+    // create the bullet list
+    std::vector<Bullet> bullets;
+    
     // Start the game loop
     while (window.isOpen())
     {
@@ -95,14 +134,16 @@ int main(int, char const**)
         {
             exit(event, window);
             moveTank(event, tanks[0]);
+            actionTank(event, bullets, tanks[0]);
+            testFireBullet(window, event, bullets, tanks[0]);
         }
-
+        
         sf::Time elapsed = clock.restart();
-
-        update(elapsed, tanks);
-        repaint(window, tanks);
+        
+        update(elapsed, bullets, tanks);
+        repaint(window, bullets, tanks);
     }
-
+    
     return EXIT_SUCCESS;
 }
 

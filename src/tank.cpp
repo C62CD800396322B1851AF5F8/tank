@@ -1,6 +1,16 @@
 
 #include "tank.h"
 #include "math.h"
+#include "bullet.h"
+
+sf::Vector2f rotateVector(sf::Vector2f v, float angle) {
+    float current_x = v.x;
+    float current_y = v.y;
+    // rotation matrix of the velocity vector
+    float x_offset = current_x * cos(angle) - current_y * sin(angle);
+    float y_offset = current_x * sin(angle) + current_y * cos(angle);
+    return sf::Vector2f(x_offset, y_offset);
+}
 
 void Tank::moveUp() {
     movingUp = true;
@@ -32,6 +42,16 @@ float Tank::getRadius() {
     return sqrt(tsize.x*tsize.x + tsize.y*tsize.y)/2;
 }
 
+Bullet Tank::fire() {
+    float rotation = this->getRotation() TO_RADIAN;
+    sf::Vector2f direction = rotateVector(TANK_VELOCITY, rotation);
+    sf::Vector2f p = this->getPosition();
+    Bullet b(p.x, p.y, direction);
+    float r = this->getRadius() + b.getRadius();
+    b.move(direction * r);
+    return b;
+}
+
 void Tank::update(sf::Time elapsed) {
     float e = elapsed.asSeconds();
     // update position
@@ -39,31 +59,27 @@ void Tank::update(sf::Time elapsed) {
         // don't move if orders are contradictory
     } else {
         if (movingUp) {
-            velocity = sf::Vector2f(0.0, -1.0);
+            velocity = TANK_VELOCITY;
         }
         if (movingDown) {
-            velocity = sf::Vector2f(0.0,  1.0);
+            velocity = TANK_VELOCITY * (-1.0f);
         }
-        float current_x = velocity.x;
-        float current_y = velocity.y;
-        // transform the rotation in radian
-        float rotation = this->getRotation() * 3.14159 / 180;
-        // rotation matrix of the velocity vector
-        float x_offset = current_x * cos(rotation) - current_y * sin(rotation);
-        float y_offset = current_x * sin(rotation) + current_y * cos(rotation);
 
-        this->move(x_offset, y_offset);
+        float rotation = this->getRotation() TO_RADIAN;
+        sf::Vector2f offset = rotateVector(velocity, rotation);
+
+        this->move(offset * TANK_SPEED * e);
     }
     // update rotation
     if (turningLeft ^ turningRight) {
         float angle = 0.0;
         if (turningLeft) {
-            angle = -100 * e;
+            angle = -100;
         }
         if (turningRight) {
-            angle =  100 * e;
+            angle =  100;
         }
-        this->rotate(angle);
+        this->rotate(angle * e);
     }
 }
 

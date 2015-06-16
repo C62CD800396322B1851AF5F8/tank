@@ -30,7 +30,7 @@ bool Bullet::intersects(Obstacle& other) {
     // minimum Euclidian distance
     float r = this->getRadius() + other_radius;
     // center of the Obstacle
-    sf::Vector2f ocenter = other.getPosition() + sf::Vector2f(other_radius, other_radius);
+    sf::Vector2f ocenter = other.getPosition();
     // vector from Obstacle to bullet
     sf::Vector2f p = this->getPosition() - ocenter;
     return p.x * p.x + p.y * p.y < r * r;

@@ -4,6 +4,7 @@
 
 #include <SFML/Graphics.hpp>
 class Bullet;
+class Obstacle;
 
 #define TANK_SPEED 200.0f
 #define TANK_SIZE 50
@@ -29,8 +30,9 @@ public:
 public:
     float getRadius();
 public:
+    sf::Vector2f intersects(Obstacle&);
     Bullet fire();
-    void update(sf::Time elapsed, float width, float height);
+    void update(sf::Time elapsed, float width, float height, std::vector<Obstacle>& obstacles);
 private:
     bool movingUp = false;
     bool movingDown = false;

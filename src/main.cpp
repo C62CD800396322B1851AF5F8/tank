@@ -104,7 +104,7 @@ void update(sf::Time& elapsed, std::vector<Bullet>& bullets, std::vector<Obstacl
     }
     for (std::size_t i = 0; i < tanks.size(); i++) {
         Tank& t = tanks[i];
-        t.update(elapsed, WIDTH, HEIGHT);
+        t.update(elapsed, WIDTH, HEIGHT, obstacles);
     }
     // check for collisions
     for (std::size_t i = 0; i < bullets.size(); i++) {
@@ -141,9 +141,9 @@ int main(int, char const**)
     
     // create an obstacle
     std::vector<Obstacle> obstacles;
-    obstacles.push_back(Obstacle(400, 300));
+    obstacles.push_back(Obstacle(WIDTH/3, HEIGHT/2));
     // or two
-    obstacles.push_back(Obstacle(WIDTH, HEIGHT/2));
+    obstacles.push_back(Obstacle(2*WIDTH/3, HEIGHT/2));
     
     // Start the game loop
     while (window.isOpen())

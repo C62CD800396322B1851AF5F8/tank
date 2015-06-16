@@ -2,6 +2,7 @@
 #include "tank.h"
 #include "math.h"
 #include "bullet.h"
+#include "obstacle.h"
 
 sf::Vector2f rotateVector(sf::Vector2f v, float angle) {
     float current_x = v.x;
@@ -42,6 +43,19 @@ float Tank::getRadius() {
     return sqrt(tsize.x*tsize.x + tsize.y*tsize.y)/2;
 }
 
+sf::Vector2f Tank::intersects(Obstacle& o) {
+    sf::Vector2f p = this->getPosition() - o.getPosition();
+    float distance = this->getRadius() + o.getRadius();
+    // calculate norm
+    float norm = sqrt(p.x * p.x + p.y * p.y);
+    float diff = 1.0 - distance/norm;
+    if (diff > 0.0) {
+        return sf::Vector2f(0.0, 0.0);
+    } else {
+        return p * ((distance - norm) / norm);
+    }
+}
+
 Bullet Tank::fire() {
     float rotation = this->getRotation() TO_RADIAN;
     sf::Vector2f direction = rotateVector(TANK_VELOCITY, rotation);
@@ -52,7 +66,7 @@ Bullet Tank::fire() {
     return b;
 }
 
-void Tank::update(sf::Time elapsed, float width, float height) {
+void Tank::update(sf::Time elapsed, float width, float height, std::vector<Obstacle>& obstacles) {
     float e = elapsed.asSeconds();
     // update position
     if (!(movingUp ^ movingDown)) {
@@ -69,6 +83,15 @@ void Tank::update(sf::Time elapsed, float width, float height) {
         sf::Vector2f offset = rotateVector(velocity, rotation);
         
         this->move(offset * TANK_SPEED * e);
+        
+        // stay out of obstacles
+        for (std::size_t i = 0; i < obstacles.size(); i++) {
+            Obstacle& o = obstacles[i];
+            sf::Vector2f v = this->intersects(o);
+            if (v.x != 0.0 || v.y != 0.0) {
+                this->move(v);
+            }
+        }
         
         // stay in the arena
         sf::Vector2f p = this->getPosition();

@@ -1,5 +1,6 @@
 # tank
 Tank game to learn SFML and C++
+The way textures are loaded is specific to MacOS X.
 
 ## Game concept
 tanks are fighting in an arena. Their bullets can bounce on the external walls, but are stopped when hitting objects in the arena, be it a tank or an obstacle.
@@ -41,7 +42,9 @@ corner of the arena: the bullets are big enough to always touch a side of a wall
 - [X] Code the Wall of the arena, fire a Bullet to check it bounces, then check if the Tank cannot pass through.
 - [X] Code an Obstacle and check the detection with a Bullet works — the Bullet disappears but not the Obstacle.
 - [X] Make the Obstacle impossible to go through for the tank.
-- [ ] Add some sprites for the Tank, the Bullet and the Obstacle.
+- [X] Add some sprites for the Tank, the Bullet and the Obstacle.
+- [ ] Check if two bullets collide
+- [ ] Add another tank
 
 ## Improvements
 * Everything is on the stack, so I should learn how to use the heap in C++

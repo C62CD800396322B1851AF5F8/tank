@@ -149,20 +149,31 @@ int main(int, char const**)
         t.setTexture(&tank_texture);
     }
 
+    // create the bullet list
+    std::vector<Bullet> bullets;
+
     // create a bullet texture
     sf::Texture bullet_texture;
     if (!bullet_texture.loadFromFile(resourcePath() + "bullet_texture.png")) {
         return EXIT_FAILURE;
     }
 
-    // create the bullet list
-    std::vector<Bullet> bullets;
-
     // create an obstacle
     std::vector<Obstacle> obstacles;
     obstacles.push_back(Obstacle(WIDTH/3, HEIGHT/2));
     // or two
     obstacles.push_back(Obstacle(2*WIDTH/3, HEIGHT/2));
+
+    // create an obstacle texture
+    sf::Texture obstacle_texture;
+    if (!obstacle_texture.loadFromFile(resourcePath() + "obstacle_texture.png")) {
+        return EXIT_FAILURE;
+    }
+
+    for (std::size_t i = 0; i < obstacles.size(); i++) {
+        Obstacle& o = obstacles[i];
+        o.setTexture(&obstacle_texture);
+    }
 
     // Start the game loop
     while (window.isOpen())

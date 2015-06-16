@@ -60,9 +60,11 @@ void moveTank(sf::Event& event, Tank& tank) {
     }
 }
 
-void actionTank(sf::Event& event, std::vector<Bullet>& bullets, Tank& tank) {
+void actionTank(sf::Event& event, std::vector<Bullet>& bullets, Tank& tank, sf::Texture& bullet_texture) {
     if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Space) {
-        bullets.push_back(tank.fire());
+        Bullet b = tank.fire();
+        b.setTexture(&bullet_texture);
+        bullets.push_back(b);
     }
 }
 
@@ -147,6 +149,12 @@ int main(int, char const**)
         t.setTexture(&tank_texture);
     }
 
+    // create a bullet texture
+    sf::Texture bullet_texture;
+    if (!bullet_texture.loadFromFile(resourcePath() + "bullet_texture.png")) {
+        return EXIT_FAILURE;
+    }
+
     // create the bullet list
     std::vector<Bullet> bullets;
 
@@ -165,7 +173,7 @@ int main(int, char const**)
         {
             exit(event, window);
             moveTank(event, tanks[0]);
-            actionTank(event, bullets, tanks[0]);
+            actionTank(event, bullets, tanks[0], bullet_texture);
             testFireBullet(window, event, bullets, tanks[0]);
         }
 

@@ -8,7 +8,7 @@ float norm2(float x, float y) {
     return x * x + y * y;
 }
 
-Bullet::Bullet(float x, float y, sf::Vector2f direction) : sf::CircleShape(10) {
+Bullet::Bullet(float x, float y, sf::Vector2f direction) : sf::CircleShape(BULLET_SIZE) {
     this->setPosition(x, y);
     float dx = direction.x;
     float dy = direction.y;

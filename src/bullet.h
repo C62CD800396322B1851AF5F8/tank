@@ -7,6 +7,7 @@ class Obstacle;
 class Tank;
 
 #define BULLET_SPEED 750.0f
+#define BULLET_SIZE 10.0f
 
 class Bullet : public sf::CircleShape {
 public:

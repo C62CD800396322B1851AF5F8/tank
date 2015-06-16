@@ -1,5 +1,6 @@
 
 #include <SFML/Graphics.hpp>
+#include "ResourcePath.hpp"
 #include "bullet.h"
 #include "obstacle.h"
 #include "tank.h"
@@ -38,7 +39,7 @@ void moveTank(sf::Event& event, Tank& tank) {
                 break;
         }
     }
-    
+
     if (event.type == sf::Event::KeyReleased) {
         switch (event.key.code) {
             case sf::Keyboard::Up:
@@ -77,7 +78,7 @@ void testFireBullet(sf::Window& window, sf::Event& event, std::vector<Bullet>& b
 void repaint(sf::RenderWindow& window, std::vector<Bullet>& bullets, std::vector<Obstacle>& obstacles, std::vector<Tank>& tanks) {
     // Clear screen
     window.clear();
-    
+
     // Draw the sprites
     for (std::size_t i = 0; i < bullets.size(); i++) {
         Bullet& b = bullets[i];
@@ -91,7 +92,7 @@ void repaint(sf::RenderWindow& window, std::vector<Bullet>& bullets, std::vector
         Obstacle& o = obstacles[i];
         window.draw(o);
     }
-    
+
     // Update the window
     window.display();
 }
@@ -129,22 +130,32 @@ int main(int, char const**)
 {
     // Create the main window
     sf::RenderWindow window(sf::VideoMode(WIDTH, HEIGHT), "Tank Game");
-    
+
     // track elapsed time
     sf::Clock clock;
-    
+
     // create a Tank
     std::vector<Tank> tanks(1);
-    
+
+    // add a texture to the tank
+    sf::Texture tank_texture;
+    if (!tank_texture.loadFromFile(resourcePath() + "tank_texture.png")) {
+        return EXIT_FAILURE;
+    }
+    for (std::size_t i = 0; i < tanks.size(); i++) {
+        Tank& t = tanks[i];
+        t.setTexture(&tank_texture);
+    }
+
     // create the bullet list
     std::vector<Bullet> bullets;
-    
+
     // create an obstacle
     std::vector<Obstacle> obstacles;
     obstacles.push_back(Obstacle(WIDTH/3, HEIGHT/2));
     // or two
     obstacles.push_back(Obstacle(2*WIDTH/3, HEIGHT/2));
-    
+
     // Start the game loop
     while (window.isOpen())
     {
@@ -157,12 +168,12 @@ int main(int, char const**)
             actionTank(event, bullets, tanks[0]);
             testFireBullet(window, event, bullets, tanks[0]);
         }
-        
+
         sf::Time elapsed = clock.restart();
-        
+
         update(elapsed, bullets, obstacles, tanks);
         repaint(window, bullets, obstacles, tanks);
     }
-    
+
     return EXIT_SUCCESS;
 }

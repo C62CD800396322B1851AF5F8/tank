@@ -39,7 +39,7 @@ bool Bullet::intersects(Obstacle& other) {
 void Bullet::update(sf::Time& elapsed, float width, float height) {
     float e = elapsed.asSeconds();
     this->move(this->direction * e);
-    
+
     // bounce on the walls
     sf::Vector2f p = this->getPosition();
     float r = this->getRadius();

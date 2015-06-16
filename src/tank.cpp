@@ -78,12 +78,12 @@ void Tank::update(sf::Time elapsed, float width, float height, std::vector<Obsta
         if (movingDown) {
             velocity = TANK_VELOCITY * (-1.0f);
         }
-        
+
         float rotation = this->getRotation() TO_RADIAN;
         sf::Vector2f offset = rotateVector(velocity, rotation);
-        
+
         this->move(offset * TANK_SPEED * e);
-        
+
         // stay out of obstacles
         for (std::size_t i = 0; i < obstacles.size(); i++) {
             Obstacle& o = obstacles[i];
@@ -92,7 +92,7 @@ void Tank::update(sf::Time elapsed, float width, float height, std::vector<Obsta
                 this->move(v);
             }
         }
-        
+
         // stay in the arena
         sf::Vector2f p = this->getPosition();
         float r = this->getRadius();

@@ -50,4 +50,6 @@ corner of the arena: the bullets are big enough to always touch a side of a wall
 * Everything is on the stack, so I should learn how to use the heap in C++
 * MVC is squished into marmalade, which I should be ashamed coming from the modeling community
 * Replace Obstacles by a polygon (with collision detection)
+* Refactor the collision code
+* Add a GUI player to relaunch the game, pause it and so on
 
